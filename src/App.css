@@ -1,0 +1,63 @@
+.WrappedButton {
+    float: right;
+    padding: 6px 12px;
+}
+
+.WrappedLink {
+    height: 100%;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+}
+
+.WrappedLink:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.ErrorMsg {
+    color: red;
+}
+.InputError {
+    border-color: red;
+}
+.Article {
+    list-style: none;
+    background-color: white;
+    box-shadow: 4px 4px #ccc;
+    padding: 12px;
+    text-transform: capitalize;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 12px 0px;
+}
+
+.ViewButton {
+    margin-top: -8px;
+    margin-right: -7px;
+    box-shadow: 2px 2px slategrey;
+}
+.FullArticle h3 {
+    text-transform: capitalize;
+    text-decoration: underline;
+}
+
+.FullArticle p {
+    padding: 18px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: inset 2px 2px #ccc;
+}
+.AddArticleButton {
+    box-shadow: 3px 3px #547393;
+}
+
+.Header {
+    box-shadow: 3px 3px #ccc;
+    border-radius: 5px;
+    padding: 12px 0px 0px 12px;
+}
+
+.ShowArticlesButton {
+    box-shadow: 3px 3px #547393;
+}
