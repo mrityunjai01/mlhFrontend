@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/mlhFrontend/static/css/main.bcd5d942.chunk.css",
+    "main.js": "/mlhFrontend/static/js/main.0fba520a.chunk.js",
+    "main.js.map": "/mlhFrontend/static/js/main.0fba520a.chunk.js.map",
+    "runtime-main.js": "/mlhFrontend/static/js/runtime-main.cad79aae.js",
+    "runtime-main.js.map": "/mlhFrontend/static/js/runtime-main.cad79aae.js.map",
+    "static/css/2.4be38407.chunk.css": "/mlhFrontend/static/css/2.4be38407.chunk.css",
+    "static/js/2.f66ed362.chunk.js": "/mlhFrontend/static/js/2.f66ed362.chunk.js",
+    "static/js/2.f66ed362.chunk.js.map": "/mlhFrontend/static/js/2.f66ed362.chunk.js.map",
+    "static/js/3.1323e6f2.chunk.js": "/mlhFrontend/static/js/3.1323e6f2.chunk.js",
+    "static/js/3.1323e6f2.chunk.js.map": "/mlhFrontend/static/js/3.1323e6f2.chunk.js.map",
+    "index.html": "/mlhFrontend/index.html",
+    "static/css/2.4be38407.chunk.css.map": "/mlhFrontend/static/css/2.4be38407.chunk.css.map",
+    "static/css/main.bcd5d942.chunk.css.map": "/mlhFrontend/static/css/main.bcd5d942.chunk.css.map",
+    "static/js/2.f66ed362.chunk.js.LICENSE.txt": "/mlhFrontend/static/js/2.f66ed362.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.cad79aae.js",
+    "static/css/2.4be38407.chunk.css",
+    "static/js/2.f66ed362.chunk.js",
+    "static/css/main.bcd5d942.chunk.css",
+    "static/js/main.0fba520a.chunk.js"
+  ]
+}

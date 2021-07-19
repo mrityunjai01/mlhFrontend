@@ -4,8 +4,8 @@ import { Redirect } from 'react-router-dom';
 import ErrorMsg from './errorMsg';
 import InputField from './inputField';
 
-const submitNewArticle = (articleData) => {
-    return fetch('/api/articles/add', options(articleData))
+const addNewCourse = (CourseData) => {
+    return fetch('/api/Courses/add', options(CourseData))
     .then(res => res.json())
 }
 const options = data => {
@@ -22,19 +22,19 @@ const FIELDS = [
     {name: 'title', type: 'text', label: 'Title'},
     {name: 'author', type: 'text', label: 'Author', disabled: 'disabled'}
 ];
-class AddArticle extends Component {
+class AddCourse extends Component {
     state = {
-        article: {},
+        Course: {},
         errors: {}
     };
 
     componentWillMount() {
-        if (localStorage.getItem('AddArticlePage') !== null ) {
-            const { article, errors } = JSON.parse(localStorage.getItem('AddArticlePage'));
+        if (localStorage.getItem('AddCoursePage') !== null ) {
+            const { Course, errors } = JSON.parse(localStorage.getItem('AddCoursePage'));
             this.setState(prevState => {
                 return {
                     ...prevState,
-                    article: {...article},
+                    Course: {...Course},
                     errors: {...errors}
                 };
             });
@@ -60,33 +60,33 @@ class AddArticle extends Component {
         this.setState((prevState) => {
             return {
                 ...prevState,
-                article: {
-                    ...prevState.article,
+                Course: {
+                    ...prevState.Course,
                     [field]: value
                 },
                 errors: {...errors}
             };
-        }, () => localStorage.setItem('AddArticlePage', JSON.stringify(this.state)));
+        }, () => localStorage.setItem('AddCoursePage', JSON.stringify(this.state)));
     }
 
     componentWillUnmount() {
-        localStorage.removeItem('AddArticlePage');
+        localStorage.removeItem('AddCoursePage');
     }
 
-    handleNewArticleSubmit = (e) => {
+    handleNewCourseSubmit = (e) => {
         e.preventDefault();
         let errors = {...this.state.errors};
         const formValuesValid = Object.keys(errors).filter(field => errors[field] !== "").length === 0 ? true : false;
         if ( !formValuesValid ) {
             return;
         } else {
-            this.props.submitNewArticle({...this.state.article, author: this.props.authenticatedUsername})
+            this.props.addNewCourse({...this.state.Course, author: this.props.authenticatedUsername})
             .then(res => {
                 if (res.errors) {
                     this.setState(prevState => {
                         return {
                             ...prevState,
-                            article: {...prevState.article},
+                            Course: {...prevState.Course},
                             errors: {...prevState.errors, ...res.errors}
                         };
                     });
@@ -104,12 +104,12 @@ class AddArticle extends Component {
         return (
             <div className="container">
                 <br />
-                <h3 className="text-center">Add Article</h3>
+                <h3 className="text-center">Add Course</h3>
                 <div className="jumbotron">
-                    <form onSubmit={this.handleNewArticleSubmit}>
+                    <form onSubmit={this.handleNewCourseSubmit}>
                         <InputField key={FIELDS[0].name}
                             type={FIELDS[0].type} name={FIELDS[0].name} label={FIELDS[0].label}
-                            defaultValue={this.state.article.title}
+                            defaultValue={this.state.Course.title}
                             errors={this.state.errors}
                             onChange={this.handleInputChange} />
                         <InputField key={FIELDS[1].name}
@@ -121,9 +121,9 @@ class AddArticle extends Component {
                             <label>Body</label>
                             <textarea
                                 name="body" style={{height: '200px'}}
-                                className="form-control" placeholder="Your article's contents goes here... Good luck!"
+                                className="form-control" placeholder="Your Course's contents goes here... Good luck!"
                                 onChange={this.handleInputChange}
-                                defaultValue={this.state.article.body} />
+                                defaultValue={this.state.Course.body} />
                             {this.state.errors.body !== '' && <ErrorMsg msg={this.state.errors.body} />}
                         </div>
                         <button className="btn btn-success">Submit</button>
@@ -137,14 +137,14 @@ class AddArticle extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.user.isAuthenticated,
-        authenticatedUsername: state.user.authenticatedUsername
+        authenticatedUsername: state.user.email
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        submitNewArticle: (articleData) => dispatch(submitNewArticle(articleData))
+        addNewCourse: (CourseData) => dispatch(addNewCourse(CourseData))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddArticle);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCourse);

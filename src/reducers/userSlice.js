@@ -25,33 +25,41 @@ const validCredentials = () => {
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        isAuthenticated: validCredentials(),
+        isAuthenticate: false,
         userId: validCredentials() === false ? '' : jwt.decode(localStorage.getItem('jwtToken')).uid,
+        email: 'not logged in'
     },
     reducers: {
         userLogin: (state, action) => {
-            fetch(`${API_URI}/user/login`, options(action.payload))
-            .then(res => res.json())
-            .then(res => {
-                
-                if (res.token) {
-                    const token = res.token
-                    delete res.token
-                    localStorage.setItem('jwtToken', token)
-                    state.isAuthenticated = true
-                    console.log(jwt.decode(token))
-                    state.userId = jwt.decode(token).uid
-                }
-                // console.log(res)
-                // return res
-            })
+            const token = localStorage.getItem('jwtToken')
+            state.userId = jwt.decode(token).id
+            state.email = jwt.decode(token).email
+            state.isAuthenticated = true
+            
             
         },
         userLogout: (state, action) => {
+            state.isAuthenticated = false
+            state.userId = "No Auth"
+            state.email = "Not logged in"
             localStorage.setItem('jwtToken', '')
         }
     }
 })
 
 export const {userLogin, userLogout} = userSlice.actions
+export const userLoginThunk = userLoginCreds => async dispatch => {
+    let res = await fetch(`${API_URI}/user/login`, options(userLoginCreds))
+    res = await res.json()
+    
+    if (res.token) {
+        const token = res.token
+        delete res.token
+        localStorage.setItem('jwtToken', token)
+        
+        dispatch(userLogin())
+        return "AUTH_OK"
+    }
+    return "AUTH_ERR"
+}
 export default userSlice.reducer

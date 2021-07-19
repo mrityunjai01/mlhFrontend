@@ -23,21 +23,31 @@ const App = () => {
         <Switch>
           <Route
             exact
-            path="/article/add"
-            component={AddCourse} />
+            path="/courses/add"
+          >
+            <AddCourse/>
+          </Route>  
           <Route
-            path="/article/edit/:id"
-            component={EditCourse} />
+            path="/courses/edit/:id">
+            <EditCourse/>
+          </Route>
           <Route
-            path="/articles/:id"
-            component={SingleCourse} />
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/" component={Home} />
+            path="/courses/:id"
+          >
+            <SingleCourse/>
+          </Route>
+          <Route path="/login">
+            <Login/>
+          </Route>
+          <Route path="/signup">
+            <Signup/>
+          </Route>
+          <Route path="/">
+            <Home/>
+          </Route>
           <Route path="/courses">
             <CourseList />
           </Route>
-          <Route path="/courses/edit/:id" component={Edit} />
           <Route path="/create">
             <Create />
           </Route>

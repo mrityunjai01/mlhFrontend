@@ -2,15 +2,15 @@ import React from 'react';
 
 import WrappedLink from './wrappedLink';
 
-const Article = (props) => {
+const course = (props) => {
     return (
-        <li className="Article">
+        <li className="course">
             <strong>{props.title}</strong>
             <WrappedLink
-                to={'/articles/' + props.id}
+                to={'/courses/' + props.id}
                 buttonClasses={['btn', 'btn-info', 'ViewButton']}>View</WrappedLink>
         </li>
     );
 }
 
-export default Article;
+export default course;

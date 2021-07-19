@@ -1,80 +1,187 @@
 import React, { Component } from 'react';
+import YouTubePlayer from 'yt-player';
 import { connect } from 'react-redux';
-import { getThisCourse, getAllCourses, getMyCourses } from '../reducers/courseSlice';
-import Article from './article';
+import { getThisCourse, getAllCourses, getMyCourses, getAllCoursesThunk, getMyCoursesThunk } from '../reducers/courseSlice';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card'
 import WrappedLink from './wrappedLink';
+import { withRouter } from 'react-router-dom';
 
 
 class Home extends Component {
-    state = {
-        showMyArticles: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            errorMsg: '',
+            showMyCourses: false,
+        }
     }
 
     componentWillMount() {
-        if (this.props.location.pathname === '/article/myarticles' && !this.state.showMyArticles) {
-            this.toggleShowMyArticles();
+        if (this.props.location.pathname === '/Course/myCourses' && !this.state.showMyCourses) {
+            this.toggleShowMyCourses();
         }
     }
 
     componentDidMount() {
-        this.props.initArticles();
+        this.props.initCourses()
+            .then(res => {
+                if (res !== "OK") {
+                    this.setState({
+                        errorMsg: res,
+                    })
+                }
+            })
+
         if (this.props.isAuthenticated) {
             this.props.getMyCourses();
         }
     }
 
-    toggleShowMyArticles = () => {
+    toggleShowMyCourses = () => {
         this.setState((prevState) => {
             return {
-                showMyArticles: !prevState.showMyArticles
+                showMyCourses: !prevState.showMyCourses
             }
         });
     }
 
     render() {
-        let allArticles = this.props.allArticles || JSON.parse(localStorage.getItem('BasicMERNStackAppAllArticles'));
-        allArticles = allArticles.map(article => (
-            <Article
-                key={article._id}
-                id={article._id}
-                title={article.title} />
-        ));
+        let allCourses = this.props.allCourses || JSON.parse(localStorage.getItem('BasicMERNStackAppAllCourses'));
+        
+        let players = []
+        if (allCourses !== null) {
+            
+            allCourses = allCourses.map((course, ind) => {
+                try {
 
-        let myArticles = [];
-        if (this.props.isAuthenticated && this.state.showMyArticles) {
-            if (this.props.myArticles) {
-                myArticles = [...this.props.myArticles];
-            } else {
-                myArticles = [...JSON.parse(localStorage.getItem('BasicMERNStackAppMyArticles'))]
-            }
-            myArticles = myArticles.map(article => (
-                <Article
-                    key={article._id}
-                    id={article._id}
-                    title={article.title} />
-            ));
+                    const player = new YouTubePlayer(`#player-${ind}`, {
+                        width: 560,
+                        height: 315,
+                        captions: 'en'
+                    })
+
+                    player.load(course.courseLink)
+                    players.push({ link: course.courseLink, player: player })
+                    player.on('paused', () => {
+
+                    })
+                }
+                catch (err) {
+
+                }
+                return (
+                    <div key={ind} className="player-div">
+                        <Accordion >
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey="0">
+                                    {course.courseName}
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="0">
+                                    <Card.Body>
+                                        <div id={`player-${ind}`} />
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey="0">
+                                    Notes
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="1">
+                                    <Card.Body>
+                                        some sample notes
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
+                    </div>
+                )
+
+            });
         }
 
-        const showArticlesLink = <WrappedLink
-                to={this.state.showMyArticles ? "/" : "/article/myarticles"}
-                buttonClasses={['btn', 'btn-outline-info', 'mr-3', 'MyArticlesButton']}
-                onClick={this.toggleShowMyArticles}>
-                    { this.state.showMyArticles ? 'All Articles' : 'My Articles' }
-                </WrappedLink>
+        let myCourses = [];
+        if (this.props.isAuthenticated && this.state.showMyCourses) {
+            if (this.props.myCourses) {
+                myCourses = [...this.props.myCourses];
+            } else {
+                myCourses = [...JSON.parse(localStorage.getItem('BasicMERNStackAppMyCourses'))]
+            }
+            let myCourse_players = []
+            if (myCourses !== null) {
+                
+                myCourses = myCourses.map((course, ind) => {
+                    try {
+
+                        const player = new YouTubePlayer(`#player-${ind}`, {
+                            width: 560,
+                            height: 315,
+                            captions: 'en'
+                        })
+
+                        player.load(course.courseLink)
+                        myCourse_players.push({ link: course.courseLink, player: player })
+                        player.on('paused', () => {
+
+                        })
+                    }
+                    catch (err) {
+
+                    }
+                    return (
+                        <div key={ind} className="player-div">
+                            <Accordion >
+                                <Card>
+                                    <Accordion.Toggle as={Card.Header} eventKey="0">
+                                        {course.courseName}
+                                    </Accordion.Toggle>
+                                    <Accordion.Collapse eventKey="0">
+                                        <Card.Body>
+                                            <div id={`player-${ind}`} />
+                                        </Card.Body>
+                                    </Accordion.Collapse>
+                                </Card>
+                                <Card>
+                                    <Accordion.Toggle as={Card.Header} eventKey="0">
+                                        Notes
+                                    </Accordion.Toggle>
+                                    <Accordion.Collapse eventKey="1">
+                                        <Card.Body>
+                                            some sample notes
+                                        </Card.Body>
+                                    </Accordion.Collapse>
+                                </Card>
+                            </Accordion>
+                        </div>
+                    )
+
+                });
+            }
+
+            
+        }
+
+        const showCoursesLink = <WrappedLink
+            to={this.state.showMyCourses ? "/" : "/Course/myCourses"}
+            buttonClasses={['btn', 'btn-outline-info', 'me-3', 'MyCoursesButton']}
+            onClick={this.toggleShowMyCourses}>
+            {this.state.showMyCourses ? 'All Courses' : 'My Courses'}
+        </WrappedLink>
 
         return (
             <div className="container">
                 <br />
                 <div className="Header">
-                    <h1 style={{display: 'inline-block'}}>All Courses</h1>
-                    <WrappedLink to="/article/add" buttonClasses={['btn', 'btn-primary', 'mr-3', 'AddArticleButton']}>Add Course</WrappedLink>
-                    {this.props.isAuthenticated && showArticlesLink}
+                    <h1 style={{ display: 'inline-block' }}>All Courses</h1>
+                    <WrappedLink to="/courses/add" buttonClasses={['btn', 'btn-primary', 'me-3', 'AddCourseButton']}>Add Course</WrappedLink>
+                    {this.props.isAuthenticated && showCoursesLink}
                 </div>
                 <br />
                 <div>
                     <section className="jumbotron">
-                        <div className="Articles">
-                            { this.state.showMyArticles ? myArticles : allArticles }
+                        <div className="Courses">
+                            {this.state.errorMsg}
+                            {this.state.showMyCourses ? myCourses : allCourses}
                         </div>
                     </section>
                 </div>
@@ -85,17 +192,17 @@ class Home extends Component {
 
 const mapStateToProps = state => {
     return {
-        allArticles: state.course.allCourses,
-        myArticles: state.course.myCourses,
+        allCourses: state.course.allCourses,
+        myCourses: state.course.myCourses,
         isAuthenticated: state.user.isAuthenticated
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        initArticles: () => dispatch(getAllCourses()),
-        getMyCourses: () => dispatch(getMyCourses())
+        initCourses: () => dispatch(getAllCoursesThunk()),
+        getMyCourses: () => dispatch(getMyCoursesThunk())
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Home));

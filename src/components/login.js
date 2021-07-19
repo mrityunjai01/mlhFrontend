@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { userLogin } from '../reducers/userSlice';
+import { Redirect, withRouter } from 'react-router-dom';
+import { userLogin, userLoginThunk } from '../reducers/userSlice';
 
 import InputField from './inputField';
 
@@ -50,28 +50,17 @@ class Login extends Component {
         });
     }
 
-    handleLogin = (e) => {
+    handleLogin = async (e) => {
         e.preventDefault();
         let errors = {...this.state.errors};
-        // console.log(this.state.userCredentials);
         const userCredentialsValid = Object.keys(errors).filter(field => errors[field] !== "").length === 0 ? true : false;
         if ( !userCredentialsValid ) {
             return;
         } else {
-            this.props.userLogin(this.state.userCredentials)
-            // .then(res => {
-            //     if (res.errors) {
-            //         this.setState(prevState => {
-            //             return {
-            //                 ...prevState,
-            //                 userCredentials: {...prevState.userCredentials},
-            //                 errors: {...prevState.errors, ...res.errors}
-            //             };
-            //         });
-            //     } else {
-            //         this.props.history.push('/');
-            //     }
-            // })
+            const res = await this.props.userLogin(this.state.userCredentials)
+            if (res==="AUTH_OK"){
+                this.props.history.push('/');
+            }
         }
     }
 
@@ -109,8 +98,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        userLogin: (userLoginDetails) => dispatch(userLogin(userLoginDetails))
+        userLogin: (userLoginDetails) => dispatch(userLoginThunk(userLoginDetails))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
